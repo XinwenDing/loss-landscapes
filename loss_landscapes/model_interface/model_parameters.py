@@ -223,6 +223,8 @@ class ModelParameters:
         for l in range(len(self.parameters)):
             # normalize one-dimensional bias vectors
             if len(self.parameters[l].size()) == 1:
+                print(ref_point.parameters[l].device)
+                print(ref_point.parameters[l].device)
                 self.parameters[l] *= (ref_point.parameters[l].norm(order) / self.parameters[l].norm(order))
             # normalize two-dimensional weight vectors
             for f in range(len(self.parameters[l])):
