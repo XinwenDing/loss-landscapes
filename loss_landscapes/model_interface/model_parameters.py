@@ -223,8 +223,6 @@ class ModelParameters:
         for l in range(len(self.parameters)):
             # normalize one-dimensional bias vectors
             if len(self.parameters[l].size()) == 1:
-                print(ref_point.parameters[l].device)
-                print(ref_point.parameters[l].device)
                 self.parameters[l] *= (ref_point.parameters[l].norm(order) / self.parameters[l].norm(order))
             # normalize two-dimensional weight vectors
             for f in range(len(self.parameters[l])):
@@ -290,6 +288,7 @@ def rand_u_like(example_vector: ModelParameters) -> ModelParameters:
     for param in example_vector:
         new_vector.append(torch.rand(size=param.size(), dtype=example_vector[0].dtype).to(param.device))
 
+    print(new_vector.device)
     return ModelParameters(new_vector)
 
 
@@ -318,6 +317,7 @@ def orthogonal_to(vector: ModelParameters) -> ModelParameters:
     """
     new_vector = rand_u_like(vector)
     new_vector = new_vector - new_vector.dot(vector) * vector / math.pow(vector.model_norm(2), 2)
+    print(new_vector.device)
     return new_vector
 
 
