@@ -230,7 +230,7 @@ def planar_interpolation(model_start: typing.Union[torch.nn.Module, ModelWrapper
 
 # noinspection DuplicatedCode
 def random_plane(model: typing.Union[torch.nn.Module, ModelWrapper], metric: Metric, distance=1, steps=20,
-                 normalization='filter', deepcopy_model=False) -> np.ndarray:
+                 normalization='filter', deepcopy_model=False, dir1=None, dir2=None) -> np.ndarray:
     """
     Returns the computed value of the evaluation function applied to the model or agent along a planar
     subspace of the parameter space defined by a start point and two randomly sampled directions.
@@ -272,8 +272,12 @@ def random_plane(model: typing.Union[torch.nn.Module, ModelWrapper], metric: Met
     model_start_wrapper = wrap_model(copy.deepcopy(model) if deepcopy_model else model)
 
     start_point = model_start_wrapper.get_module_parameters()
-    dir_one = rand_u_like(start_point)
-    dir_two = orthogonal_to(dir_one)
+    if dir1 == None and dir2 == None:
+        dir_one = rand_u_like(start_point)
+        dir_two = orthogonal_to(dir_one)
+    else:
+        dir_one = dir1
+        dir_two = dir2
 
     if normalization == 'model':
         dir_one.model_normalize_(start_point)
@@ -321,7 +325,7 @@ def random_plane(model: typing.Union[torch.nn.Module, ModelWrapper], metric: Met
         data_matrix.append(data_column)
         start_point.add_(dir_one)
 
-    return np.array(data_matrix)
+    return np.array(data_matrix), dir_one, dir_two
 
 
 # todo add hypersphere function

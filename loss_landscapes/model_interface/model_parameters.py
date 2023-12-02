@@ -310,14 +310,17 @@ def rand_n_like(example_vector: ModelParameters) -> ModelParameters:
     return ModelParameters(new_vector)
 
 
-def orthogonal_to(vector: ModelParameters) -> ModelParameters:
+def orthogonal_to(vector: ModelParameters, fixed_dir=None) -> ModelParameters:
     """
     Create a new ModelParameters object of size and shape compatible with the given
     example vector, such that the two vectors are very nearly orthogonal.
     :param vector: original vector
     :return: new vector that is very nearly orthogonal to original vector
     """
-    new_vector = rand_u_like(vector)
+    if fixed_dir == None:
+        new_vector = rand_u_like(vector)
+    else:
+        new_vector = fixed_dir
     new_vector = new_vector - new_vector.dot(vector) * vector / math.pow(vector.model_norm(2), 2)
     #print(new_vector.device)
     return new_vector
